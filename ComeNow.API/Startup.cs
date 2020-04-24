@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ComeNow.Application.Interfaces;
+using ComeNow.Domain;
+using ComeNow.Instrastucture.Security;
+using ComeNow.Persistance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace ComeNow.API
 {
@@ -25,6 +24,18 @@ namespace ComeNow.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<DataContext>(option =>
+            {
+                option.UseLazyLoadingProxies();
+                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            services.AddDefaultIdentity<AppUser>()
+                .AddSignInManager<SignInManager<AppUser>>()
+                .AddEntityFrameworkStores<DataContext>();
+
+            services.AddScoped<IUserAccessor, MockUserAccessor>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
