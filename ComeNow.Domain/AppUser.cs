@@ -9,6 +9,8 @@ namespace ComeNow.Domain
     {
         public bool CanReceiveMessage { get; set; }
         public string DisplayName { get; set; }
+
+        public virtual ICollection<PushCommand> PushCommands { get; set; }
         public virtual ICollection<Receiver> Receivers { get; set; }
     }
 }

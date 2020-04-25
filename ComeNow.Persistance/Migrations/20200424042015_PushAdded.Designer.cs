@@ -4,14 +4,16 @@ using ComeNow.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComeNow.Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200424042015_PushAdded")]
+    partial class PushAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,21 +90,6 @@ namespace ComeNow.Persistance.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("ComeNow.Domain.CommandReceiver", b =>
-                {
-                    b.Property<int>("CommandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommandId", "ReceiverId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.ToTable("CommandReceiver");
                 });
 
             modelBuilder.Entity("ComeNow.Domain.PushCommand", b =>
@@ -286,21 +273,6 @@ namespace ComeNow.Persistance.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("ComeNow.Domain.CommandReceiver", b =>
-                {
-                    b.HasOne("ComeNow.Domain.PushCommand", "PushCommand")
-                        .WithMany("CommandReceivers")
-                        .HasForeignKey("CommandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComeNow.Domain.Receiver", "Receiver")
-                        .WithMany("CommandReceivers")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ComeNow.Domain.PushCommand", b =>

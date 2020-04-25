@@ -4,14 +4,16 @@ using ComeNow.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComeNow.Persistance.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200424040224_RelationAdded")]
+    partial class RelationAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,30 +92,12 @@ namespace ComeNow.Persistance.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("ComeNow.Domain.CommandReceiver", b =>
-                {
-                    b.Property<int>("CommandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommandId", "ReceiverId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.ToTable("CommandReceiver");
-                });
-
             modelBuilder.Entity("ComeNow.Domain.PushCommand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
@@ -122,8 +106,6 @@ namespace ComeNow.Persistance.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("PushCommands");
                 });
@@ -141,12 +123,17 @@ namespace ComeNow.Persistance.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("PushCommandId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ReceivingUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("PushCommandId");
 
                     b.HasIndex("ReceivingUserId");
 
@@ -288,33 +275,15 @@ namespace ComeNow.Persistance.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ComeNow.Domain.CommandReceiver", b =>
-                {
-                    b.HasOne("ComeNow.Domain.PushCommand", "PushCommand")
-                        .WithMany("CommandReceivers")
-                        .HasForeignKey("CommandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComeNow.Domain.Receiver", "Receiver")
-                        .WithMany("CommandReceivers")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ComeNow.Domain.PushCommand", b =>
-                {
-                    b.HasOne("ComeNow.Domain.AppUser", null)
-                        .WithMany("PushCommands")
-                        .HasForeignKey("AppUserId");
-                });
-
             modelBuilder.Entity("ComeNow.Domain.Receiver", b =>
                 {
                     b.HasOne("ComeNow.Domain.AppUser", "Owner")
                         .WithMany("Receivers")
                         .HasForeignKey("OwnerId");
+
+                    b.HasOne("ComeNow.Domain.PushCommand", null)
+                        .WithMany("Receivers")
+                        .HasForeignKey("PushCommandId");
 
                     b.HasOne("ComeNow.Domain.AppUser", "ReceivingUser")
                         .WithMany()

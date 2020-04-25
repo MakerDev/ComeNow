@@ -10,6 +10,7 @@ namespace ComeNow.Domain
         public string Name { get; set; }
         public string Message { get; set; }
 
-        public virtual ICollection<Receiver> Receivers { get; set; }
+        //Many to many로 관계 바뀌어야함.
+        public virtual ICollection<CommandReceiver> CommandReceivers { get; set; }
     }
 }

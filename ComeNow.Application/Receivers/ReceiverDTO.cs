@@ -8,6 +8,6 @@ namespace ComeNow.Application.Receivers
     {
         public string Email { get; set; }
         public string DisplayName { get; set; }
-        public bool CanReceiveData { get; set; }
+        public bool CanReceiveMessage { get; set; }
     }
 }

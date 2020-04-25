@@ -7,7 +7,8 @@ namespace ComeNow.Application.User
 {
     public class UserDTO
     {
+        public string Name { get; set; }
         public string Email { get; set; }
-        public List<ReceiverDTO> Receivers { get; set; }
+        public string Token { get; set; }        
     }
 }
