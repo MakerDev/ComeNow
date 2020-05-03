@@ -12,7 +12,7 @@ namespace ComeNow.Instrastucture.Security
 {
     public class JwtGenerator : IJwtGenerator
     {
-        private SymmetricSecurityKey _key;
+        private readonly SymmetricSecurityKey _key;
 
         public JwtGenerator(IConfiguration configuration)
         {
@@ -42,6 +42,5 @@ namespace ComeNow.Instrastucture.Security
 
             return tokenHandler.WriteToken(token);
         }
-
     }
 }

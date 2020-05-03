@@ -1,25 +1,41 @@
-import React from 'react';
-import './App.css';
+import React, { useContext, useEffect, Fragment } from "react";
+import {
+  Route,
+  withRouter,
+  RouteComponentProps,
+  Switch,
+} from "react-router-dom";
+import "./App.css";
+import { RootStoreContext } from "../stores/rootStore";
+import { ToastContainer } from "react-toastify";
+import HomePage from "../../features/Home/HomePage";
+import { observer } from "mobx-react";
+import ModalContainer from "../common/modals/ModalContainer";
+import Dashboard from "../../features/Dashboard/Dashboard";
 
-function App() {
+const App: React.FC<RouteComponentProps> = () => {
+  const rootStore = useContext(RootStoreContext);
+  const { getCurrentUser } = rootStore.userStore;
+  const { token, setAppLoaded } = rootStore.commonStore;
+
+  useEffect(() => {
+    if (token) {
+      getCurrentUser().finally(() => setAppLoaded());
+    }
+  }, [getCurrentUser, token]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src="/logo.svg" className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <ModalContainer />
+      <ToastContainer position="bottom-right" />
+      <Route exact path="/" component={HomePage} />
+      <Switch>
+        <Route path="/dashboard">
+          <Dashboard />
+        </Route>
+      </Switch>
+    </Fragment>
   );
-}
+};
 
-export default App;
+export default withRouter(observer(App));

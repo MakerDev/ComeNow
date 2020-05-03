@@ -60,6 +60,19 @@ namespace ComeNow.API
                     };
                 });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "MyCors",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:3000", "https://localhost:44376"
+                                          )
+                                        .AllowAnyOrigin()
+                                        .AllowAnyMethod()
+                                        .AllowAnyHeader();
+                                  });
+            });
+
             services.AddMediatR(typeof(GetAll.Query).Assembly);
             services.AddAutoMapper(typeof(GetAll.Query).Assembly);
 
@@ -80,6 +93,8 @@ namespace ComeNow.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("MyCors");
 
             app.UseAuthentication();
             app.UseAuthorization();

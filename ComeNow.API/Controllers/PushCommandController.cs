@@ -28,6 +28,12 @@ namespace ComeNow.API.Controllers
             return await _mediator.Send(new GetAll.Query());
         }
 
+        [HttpPost("add")]
+        public async Task<Unit> AddCommand(AddPushCommand.Command command)
+        {
+            return await _mediator.Send(command);
+        }
+
         [HttpDelete("{id}/delete/receivers")]
         public async Task<Unit> RemoveReceiversFromCommand(int id, DeleteReceiverFromCommand.Command command)
         {
